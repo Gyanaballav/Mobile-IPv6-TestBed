@@ -4,8 +4,8 @@
 This README provides step-by-step instructions for setting up a testbed environment for Mobile IPv6 using Fedora virtual machines in Oracle VirtualBox. The testbed will consist of four virtual machines: Fedora - HA, Fedora - MN, Fedora - Router, and Fedora - CN.
 
 ## Prerequisites
-- Oracle VirtualBox: Download and install Oracle VirtualBox from [Oracle's official website](https://www.virtualbox.org/wiki/Downloads).
-- Fedora OS: Download the Fedora ISO image from [Fedora's official website](https://fedoraproject.org/workstation/download).
+- Oracle VirtualBox: Download and install Oracle VirtualBox from [Oracle's official website](https://www.virtualbox.org/).
+- Fedora OS: Download the Fedora ISO image from [Fedora's official website](https://getfedora.org/).
 
 ## Setup Instructions
 ### Virtual Machine Setup
@@ -68,13 +68,25 @@ Create four virtual machines in Oracle VirtualBox and name them accordingly:
     method=manual
     ```
 
-   
+### mip6d and radvd installation
+1. Download the rpm file of mip6d from [Linux@ CERN mipv6 - daemon website ](https://linuxsoft.cern.ch/cern/centos/7/updates/x86_64/repoview/mipv6-daemon.html)
 
-## Why Internal Network Type?
-Using an internal network type in VirtualBox for the testbed offers several advantages:
-- **Isolation**: Internal network type ensures that the virtual machines can communicate only with each other within the internal network, keeping the test environment isolated from external networks.
-- **Control**: It provides greater control over the network environment, allowing precise configuration and monitoring of network traffic between the virtual machines.
-- **Security**: Since the internal network is isolated from external networks, it reduces the risk of unauthorized access or interference during testing.
+2. Install the mip6d using the following command:
+```
+dnf install ~/Downloads/mipv6-daemon
+
+```
+
+3. Download and Install the radvd using the following command:
+```
+dnf install radvd
+
+```
+> **Note**
+- mip6d should be installed only in Home Agent (HA), Mobile Node (MN), Correspondence Node (CN).
+- radvd should be installed only in Home Agent (HA), Router.
+
+
 
 ## Conclusion
 Following these instructions will help you set up a testbed environment for Mobile IPv6 using Fedora virtual machines in Oracle VirtualBox. Ensure to follow each step carefully to achieve the desired configuration.

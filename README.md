@@ -92,7 +92,7 @@ dnf install radvd
 NodeConfig HA;
 DebugLevel 10;
 DoRouteOptimizationCN enabled;
-Interface ”eth0”;
+Interface "enp0s8";
 UseMnHaIPsec disabled;
 
 ```
@@ -101,11 +101,11 @@ UseMnHaIPsec disabled;
 NodeConfig MN;
 DebugLevel 10;
 DoRouteOptimizationCN enabled;
-Interface ”eth0”;
+Interface "enp0s8";
 UseMnHaIPsec disabled;
 DoRouteOptimizationMN enabled;
 UseCnBuAck enabled;
-MnHomeLink ”eth0” {
+MnHomeLink "enp0s8" {
 HomeAgentAddress 2001:db8:aaaa:3::1;
 HomeAddress 2001:db8:aaaa:3::2/64;
 }
@@ -145,7 +145,7 @@ AdvValidLifetime 12000;
 
 - Router
 ```
-interface eth1
+interface enp0s9
 {
 AdvSendAdvert on;
 AdvIntervalOpt on;
@@ -161,6 +161,42 @@ AdvRouterAddr on;
 };
 
 ```
+### Kernel Parameter Configuration
+1. Create a file named as `zz-mip6d.conf` in `/etc/sysctl.d/` directory to change the kernel configuration.
+Here `zz` is used before the file name to give it higher priority.
 
+2. Make the following changes in the `zz-mip6d.conf` file:
+- Home Agent
+```
+net.ipv6.conf.all.forwarding = 1
+net.ipv6.conf.all.autoconf = 0
+net.ipv6.conf.all.accept_ra = 0
+net.ipv6.conf.all.accept_redirects = 0
+
+```
+- Router
+```
+net.ipv6.conf.all.forwarding = 1
+net.ipv6.conf.all.autoconf = 0
+net.ipv6.conf.all.accept_ra = 0
+net.ipv6.conf.all.accept_redirects = 0
+
+```
+- Mobile Node
+```
+net.ipv6.conf.all.forwarding = 0
+net.ipv6.conf.all.autoconf = 1
+net.ipv6.conf.all.accept_ra = 1
+net.ipv6.conf.all.accept_redirects = 1
+
+```
+- Correspondence Node
+```
+net.ipv6.conf.all.forwarding = 0
+net.ipv6.conf.all.autoconf = 1
+net.ipv6.conf.all.accept_ra = 1
+net.ipv6.conf.all.accept_redirects = 1
+
+```
 ## Conclusion
 Following these instructions will help you set up a testbed environment for Mobile IPv6 using Fedora virtual machines in Oracle VirtualBox. Ensure to follow each step carefully to achieve the desired configuration.

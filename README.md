@@ -198,5 +198,69 @@ net.ipv6.conf.all.accept_ra = 1
 net.ipv6.conf.all.accept_redirects = 1
 
 ```
+### radvd start and on-bootup setting
+Start the radvd in Home Agent and Router using:
+```
+systemctl start radvd
+```
+Make it on-boot startup using:
+```
+systemctl enable radvd
+```
+Check the radvd status using:
+```
+systemctl status radvd
+```
+
+### Disabling the Firewall
+
+Firewall should be disabled in all the virtual machines as it works as security barriers, controlling what traffic enters the network and what will exit it. It may block some traffic in tunnel.
+
+By disabling we are simplifying the testing environment by eliminating the chances of filteration of traffic.
+
+To disable the firewall use:
+```
+systemctl disable firewalld 
+```
+
+## Testing the Testbed
+1. After doing the configuration in all Virtual machine, disable the NAT network in VM network settings.
+2. Then disable the internet from the system and reboot the system.
+3. Turn on the `fedora - HA` and `fedora - Router` virtual machine.
+4. Check the `radvd status ` in the both machine using following command:
+```
+systemctl status radvd
+```
+5. Check the IPv6 address of each network interface using:
+```
+ip a
+```
+6. You will see the IPv6 address which you assigned to the network interface. If not, then there is a mistake.
+7. Now Turn on the `fedora - MN` and `fedora - CN`.
+8. Check the IPv6 address using:
+```
+ip a
+```
+9. Ping from one interface to other to check the reachability.
+10. Start the mip6d by the following order:
+- Correspondence Node
+- Home Agent
+- Mobile Node
+11. Turn on the mobile IPv6 configuration in the virtual machines in the following order using:
+```
+systemctl start mip6d
+```
+12. Check the mip6d running status using:
+```
+systemctl status mip6d
+```
+13. Check the tunnel in Mobile Node using:
+```
+ifconfig
+```
+14. Ping from Correspondence Node to Mobile Node using the HoA.
+15. Move the Mobile Node from the Home Network to Foreign Network.
+16. Check the reachability.
+
 ## Conclusion
 Following these instructions will help you set up a testbed environment for Mobile IPv6 using Fedora virtual machines in Oracle VirtualBox. Ensure to follow each step carefully to achieve the desired configuration.

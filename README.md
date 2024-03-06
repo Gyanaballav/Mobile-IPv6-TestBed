@@ -86,7 +86,81 @@ dnf install radvd
 - mip6d should be installed only in Home Agent (HA), Mobile Node (MN), Correspondence Node (CN).
 - radvd should be installed only in Home Agent (HA), Router.
 
+### mip6d configuration
+- Home Agent
+```
+NodeConfig HA;
+DebugLevel 10;
+DoRouteOptimizationCN enabled;
+Interface ”eth0”;
+UseMnHaIPsec disabled;
 
+```
+- Mobile Node
+```
+NodeConfig MN;
+DebugLevel 10;
+DoRouteOptimizationCN enabled;
+Interface ”eth0”;
+UseMnHaIPsec disabled;
+DoRouteOptimizationMN enabled;
+UseCnBuAck enabled;
+MnHomeLink ”eth0” {
+HomeAgentAddress 2001:db8:aaaa:3::1;
+HomeAddress 2001:db8:aaaa:3::2/64;
+}
+
+```
+- Correspondence Node
+```
+NodeConfig CN;
+DebugLevel 10;
+DoRouteOptimizationCN enabled;
+
+```
+### radvd configuration
+- Home Agent
+```
+interface eth0
+{
+AdvSendAdvert on;
+AdvIntervalOpt off;
+AdvHomeAgentFlag on;
+MaxRtrAdvInterval 3;
+MinRtrAdvInterval 1;
+HomeAgentLifetime 10000;
+HomeAgentPreference 20;
+AdvHomeAgentInfo on;
+prefix 2001:db8:aaaa:3::1/64
+{
+AdvRouterAddr on;
+AdvOnLink on;
+AdvAutonomous on;
+AdvPreferredLifetime 10000;
+AdvValidLifetime 12000;
+};
+};
+
+```
+
+- Router
+```
+interface eth1
+{
+AdvSendAdvert on;
+AdvIntervalOpt on;
+MinRtrAdvInterval 1;
+MaxRtrAdvInterval 3;
+AdvHomeAgentFlag off;
+prefix 2001:db8:aaaa:1::1/64
+{
+AdvOnLink on;
+AdvAutonomous on;
+AdvRouterAddr on;
+};
+};
+
+```
 
 ## Conclusion
 Following these instructions will help you set up a testbed environment for Mobile IPv6 using Fedora virtual machines in Oracle VirtualBox. Ensure to follow each step carefully to achieve the desired configuration.
